@@ -10,21 +10,32 @@ export class UserService {
 
   constructor(private readonly jwtService: JwtService) {}
 
-  async createUser(username: string, password: string): Promise<User> {
-    const existingUser = this.users.find((user) => user.username === username);
+  async createUser(
+    email: string,
+    firstName: string,
+    lastName: string,
+    password: string,
+  ): Promise<User> {
+    const existingUser = this.users.find((user) => user.email === email);
     if (existingUser) {
-      throw new ConflictException('Username already exists');
+      throw new ConflictException('Email already exists');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { id: this.id++, username, password: hashedPassword };
+    const newUser = {
+      id: this.id++,
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    };
     this.users.push(newUser);
 
     return newUser;
   }
 
-  async findUserByUsername(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
+  async findUserByEmail(email: string): Promise<User | undefined> {
+    return this.users.find((user) => user.email === email);
   }
 
   async validatePassword(user: User, password: string): Promise<boolean> {
@@ -32,7 +43,7 @@ export class UserService {
   }
 
   async generateJwt(user: User): Promise<string> {
-    const payload = { username: user.username, sub: user.id };
+    const payload = { email: user.email, sub: user.id };
     return this.jwtService.sign(payload);
   }
 }

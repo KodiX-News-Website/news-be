@@ -10,13 +10,21 @@ export class UserController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() createUserDto: CreateUserDto) {
-    const { username, password } = createUserDto;
-    const user = await this.userService.createUser(username, password);
+    const { firstName, lastName, email, password } = createUserDto;
+    const user = await this.userService.createUser(
+      email,
+      firstName,
+      lastName,
+      password,
+    );
+
     return {
       message: 'User created successfully',
       user: {
         id: user.id,
-        username: user.username,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
     };
   }
@@ -24,12 +32,12 @@ export class UserController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginUserDto: LoginUserDto) {
-    const { username, password } = loginUserDto;
+    const { email, password } = loginUserDto;
 
-    const user = await this.userService.findUserByUsername(username);
+    const user = await this.userService.findUserByEmail(email);
     if (!user) {
       return {
-        message: 'Invalid username or password',
+        message: 'Invalid email or password',
       };
     }
 
@@ -40,7 +48,7 @@ export class UserController {
 
     if (!isPasswordValid) {
       return {
-        message: 'Invalid username or password',
+        message: 'Invalid email or password',
       };
     }
 
