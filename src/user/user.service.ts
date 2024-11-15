@@ -6,7 +6,6 @@ import { User } from 'src/types';
 @Injectable()
 export class UserService {
   private users: User[] = [];
-  private id = 1;
 
   constructor(private readonly jwtService: JwtService) {}
 
@@ -23,10 +22,10 @@ export class UserService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = {
-      id: this.id++,
-      firstName,
-      lastName,
-      email,
+      id: this.users.length + 1,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
       password: hashedPassword,
     };
     this.users.push(newUser);
@@ -35,7 +34,9 @@ export class UserService {
   }
 
   async findUserByEmail(email: string): Promise<User | undefined> {
-    return this.users.find((user) => user.email === email);
+    const user = this.users.find((user) => user.email === email);
+
+    return user;
   }
 
   async validatePassword(user: User, password: string): Promise<boolean> {
