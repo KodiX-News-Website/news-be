@@ -1,3 +1,12 @@
+## Technologies/libraries that were used:
+
+- Nest.js;
+- Tested locally with Insomnia;
+- class-transformer;
+- class-validator;
+- bcryptjs;
+- and other...;
+
 ## Project setup
 
 ```bash
