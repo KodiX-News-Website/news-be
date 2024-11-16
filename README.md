@@ -1,3 +1,5 @@
+🚨I will share .env file with HR🚨
+
 ## Technologies/libraries that were used:
 
 - Nest.js;
